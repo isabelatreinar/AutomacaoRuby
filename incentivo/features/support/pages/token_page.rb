@@ -18,7 +18,8 @@ class TokenPage < SitePrism::Page
         #find('button[class="btn background-image success"]').click
         # end
     janela = window_opened_by do    #a variável 'janela' recebe a janela aberta pelo clique no botão 'btn_chamar'
-        wait_for_btn_chamar
+        sleep(6)
+        wait_until_btn_chamar_visible
         btn_chamar.click
     end
     #muda de foco para a janela         

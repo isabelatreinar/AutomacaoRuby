@@ -1,6 +1,9 @@
 Before do
     @token = TokenPage.new
     @pesquisa = PesquisaPage.new
+    @produto = ProdutoPage.new
+    @carrinho = CarrinhoPage.new
+    @checkout = CheckoutPage.new
   end
   
 Before ('@token_porto')do

@@ -12,11 +12,10 @@ class PesquisaPage < SitePrism::Page
         input_busca.set prod
         #espera ate que o produto apareça na lista de produtos trazidos na digitação do produto
         wait_until_seleciona_produto_visible
-        seleciona_produto[3].click
+        seleciona_produto[1].click
         #  seleciona_produto.each do |a| 
                 # a[3].click
         # end
-
     end
 
 end

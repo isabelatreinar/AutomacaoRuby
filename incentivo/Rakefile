@@ -1,0 +1,15 @@
+
+desc 'Configurações Proxy'
+task :proxy do
+  sh "set http_proxy=10.178.129.20:8080 && set"
+end
+
+desc 'Execute cenários de pesquisa de produto'
+ task :pesquisa do
+   sh "bundle exec cucumber -t @pesquisa && -p pretty && -p token"
+ end
+
+ desc 'Execute cenários de resgate de produtos'
+ task :resgate do
+   sh "bundle exec cucumber -t @resgate && -p pretty && -p token"
+ end
