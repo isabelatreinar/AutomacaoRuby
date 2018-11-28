@@ -13,3 +13,4 @@ desc 'Execute cenários de pesquisa de produto'
  task :resgate do
    sh "bundle exec cucumber -t @resgate && -p pretty && -p token"
  end
+
