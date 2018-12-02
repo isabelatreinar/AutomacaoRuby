@@ -1,0 +1,97 @@
+
+
+Come�ando um projeto:
+1� -> Criar uma pasta no CMDER (comando mkdir <nome_da_pasta>)
+Dica: Para saber o caminho completo da pasta onde vc est� � s� digitar no cmder: pwd
+
+2� Criar depend�ncias:
+CASO TENHA PROXY BARRANDO EXECUTAR ESSE COMANDO ANTES DENTRO DA PASTA CRIADA:
+- No CMDER digitar: set http_proxy=10.178.129.20:8080 
+-  No CMDER digitar: set
+
+- CMDER digitar dentro da pasta que criei 'gem install bundle', depois digitar 'bundle init'
+- Abrir VSCODE com comando 'code .'
+- Abrir arquivo Gemfile criar editar tirando 's' de http:/, apagar todo resto e digitar:
+
+
+gem 'rspec'
+
+gem 'cucumber'
+
+gem 'capybara'
+
+gem 'selenium-webdriver'
+
+gem 'rubocop'
+
+gem 'site_prism' (para trabalhar com page object)
+- No CMDER digitar 'bundle install'
+----------------------
+�TIL!!:
+A gem do Cucumber por padr�o reseta o browser a cada cen�rio executado, utilizando no env.rb require 'capybara/cucumber', se quiser que continue a partir do ultimo cen�rio executado, utilizar os requires e vari�veis globais abaixo, e comentar o require 'capybara/cucumber':
+
+require 'capybara/dsl'
+require 'capybara/rspec/matchers'
+
+World(Capybara::DSL)
+World(Capybara::RspecMatchers)
+
+-----------------------------
+#usar os dois requires abaixo mais as variaveis globais World abaixo, se ao rodar mais de um cen�rio n�o quiser que o cucumber reset a sess�o. A gem do cucumber reseta o browser a cada cen�rio executado, se quiser que seja assim usar o require 'capybara/cucumber'
+#require 'capybara/dsl'
+#require 'capybara/rspec/matchers'
+
+3� Criar arquivo .rspec (Rspec � um framework de testes(acho que de unit�rio)), para criar digitar no CMDER 'rspec --init'
+Obs.: O teste unit�rio fica dentro da pasta 'spec'.
+
+4� Digitar no CMDER 'cucumber --init'
+
+5� Ser� criar a pasta 'features' automaticamente
+
+6� Criar um arquivo 'nomearquivo.features' dentro da pasta 'specs' e colar as especifica��es (podem ser criadas pastas para separar as funcionalidades) - (lembrando de inserir esse trecho no c�digo: '#language:pt')
+
+7� No CMDER digitar e executar o comando 'cucumber'. Ser�o criados os cen�rios.
+
+8� Criar um arquivo ruby chamado 'nomearquivo_steps.rb' dentro da pasta 'step_definitions'
+
+9� Copiar os cen�rios e colar neste arquivo .rb criado
+
+10� Dentro da pasta 'support' criar um arquivo 'env.rb' (verificar se foi criado automaticamente, se n�o, criar!') Neste arquivo s�o especificadas as bibliotecas de apoio necess�rias. O cucumber sempre procura esse arquivo, ele � o primeiro c�digo a ser executado antes das especifica��es:
+
+require 'selenium-webdriver'
+require 'capybara'
+require 'capybara/cucumber'
+require 'site_prism'
+#configurar capybara para usar com selenium
+Capybara.configure do |config|
+    config.default_driver = :selenium # essa configura��o � para instanciar o browser com Firefox
+    config.app_host = 'https://marktasks.herokuapp.com' (endere�o do site q vou testar(
+end
+#configura��o de tempo de espera para achar elemento na tela
+Capybara.default_max_wait_time = 5
+
+11� Baixar Geckodriver para instanciar browser com Firefox (https://github.com/mozilla/geckodriver/releases). Baixar e colar o execut�vel na pasta C:\Windows (s� isso)
+
+12� Atualizar firefox para �ltima vers�o!
+
+13� Ir no arquivo 'nomearquivo_steps.rb' e implementar os testes automatizados!
+
+UTILIT�RIOS:
+> Rubocop: Para fazer identa��o do c�digo
+Comando para instalar: "gem install rubocop" no CMDER
+Instalar e habilitar as extens�es no VSCode: Rubocop e Ruby Language Colorization (desabilitar nesse caso a extens�o 'Ruby')
+----------------------------------------------
+
+CONFIGURAR PROJETO PARA PAGE OBJECT
+1� No arquivo 'Gemfile' importar a biblioteca do site prism (site prism � a biblioteca de page object para ruby e capybara). 
+
+2� Executar do CMDER o comando 'bundler install' para instalar a gem
+
+3� No arquivo env.rb digitar 'require: 'site_prism''
+
+4� Criar dentro da pasta 'support', uma pasta chamada 'pages' e dentro desta pasta pages, criar um arquivo chamado 'nomeFuncionalidade_page.rb'. Dentro desse arquivo criar a classe com os elementos da p�gina da funcionalidade. Dentro dessa classe devem ter todos os elementos da p�gina, a classe deve ser chamada de 'FuncionalidadePage' . Essa classe vai herdar de SitePrism pq a sintaxe vem de siteprism (por exemplo, o comando 'element' est� na classe do SitePrism
+Ex.: 
+class LoginPage < SitePrism::Page
+	element: input_email, 'input[place...'
+end
+Onde: 'element' � uma palavra reservada do SitePrism para identificar um elemento, 'input_email' � o nome que dei para o elemento e o restante � o seletor do elemento no CSS.
