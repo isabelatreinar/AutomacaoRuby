@@ -1,0 +1,1227 @@
+WHILE
+# while first('.cart-products-count').text == '0' do
+      #   find('a[class="btn btn-secondary add-to-cart btn-block adicionar-ao-carrinho-detalhe-produto"]').click
+      # end
+
+> Localizadores e esperas:
+https://www.rubydoc.info/github/jnicklas/capybara/Capybara/Node/Finders
+https://github.com/reinaldorossetti/capybara_tips/blob/master/Capybara_comandos.md
+
+> visit �https://google.com.br� � Para visitar alguma url.
+
+page.find(:id, �id do elemento�).click � Clica em um elemento definido por ID.
+page.find(:css, �css do elemento�).click � Clica em um elemento definido por CSS.
+page.find(:xpath, �xpath do elemento�).click � Clica em um elemento definido por XPATH.
+
+page.all(:id, �id do elemento�)[0].click � Clica no primeiro elemento dentro de uma lista definido por ID.
+page.all(:css, �css do elemento�)[0].click � Clica no primeiro elemento dentro de uma lista definido por CSS.
+page.all(:xpath, �xpath do elemento�)[0].click � Clica no primeiro elemento dentro de uma lista definido por XPATH.
+
+PS: Quando nos depararmos com um checkbox, radiobutton, utilizar da seguinte forma:
+
+page.find(:radio_button, �nome do radiobutton�).set(true) � Nesse caso, ele vai selecionar aquele radiobutton.
+page.find(:checkbox, �nome do checkbox�).set(true) � Nesse caso, ele vai selecionar aquele checkbox.
+
+fill_in �nome do elemento para inserir valor�, :with => �Aprendendo Capybara� � Ir� inserir no elemento a string Aprendendo Capybara.
+
+select �Nome do item no Drop Down�, from: �nome do elemento drop down� � Seleciona um item de um drop down.
+ex: select �Apto�, from �tipo_moradia�
+
+click_button �Cadastrar� � Clic no bot�o cadastrar.
+
+click_link �Home� � Clica no link Home caso haja algum na p�gina.
+
+expect(page).to have_content �Cadastro efetuado com sucesso� � Procura a mensagem e caso tenha, ser� sucesso.
+
+Mouse Over - p�ra em cima do menu desejado sem clicar.
+find('.some_class').hover
+
+Selecionar primeiro item (bot�o) do elemento:
+Ex.: Na p�gina tem dois bot�es de excluir endere�o, quero excluir o primeiro:
+Na classe PAGE:
+element :btn_excluir, '.btnDeletar', match: :first
+
+    def removerEndereco
+        btn_excluir.click
+    end
+
+-------------------------------------------------------
+> Atualizar p�gina (F5)
+page.refresh
+
+> Comentar trecho de c�digo
+Ctrl+K, Ctrl+C para comentar as linhas
+Ctrl+K, Ctrl+U para remover o coment�rio dessas linhas
+
+
+
+> Id e Name:$('#register_email')
+
+> Placeholder: find ('input[placeholder="example@gmail.com"]').set email
+
+> clicar em href-> find(:css, 'a[href="/register"]').click
+
+> has_no_<elemento>?, por exemplo has_no_titulo? retorno true ou false, est� perguntando se esse elemento n�o existe; se ele n�o existir retorna false, ou seja, n�o existe.
+Ex.: 
+Ent�o('n�o sou autenticado') do
+	expect(@tasks.has_no_titulo?).to be false 
+#espera que o t�tulo n�o esteja na p�gina, que ele n�o esteja autenticado na tentativa de login!
+
+Obs.: @tasks � uma vari�vel referente ao objeto classe da p�gina de tarefas (tasks)
+@tasks = Tarefas.new
+
+> Espera expl�cita:
+@tasks.wait_for_<elemento>
+ex.: @tasks.wait_for_titulo 
+O capybara espera at� que 'titulo' esteja vis�vel na tela
+
+Obs.: @tasks � uma vari�vel referente ao objeto classe da p�gina de tarefas (tasks)
+@tasks = Tarefas.new
+
+> Validar se s� um registro foi cadastrado: 
+
+expect(@tasks.itens.size).to eql 1
+Onde 'itens' � a listagem!
+
+elements :itens, 'table tbody tr'
+
+> vari�vel recebendo um objeto:
+@tarefa = {
+	'titulo' => "Tarefa teste", 'data' => '01/06/2018'
+}
+
+> Tamanho de tela: page.current_window.resize_to(1200,800)
+
+> Validar se o primeiro item de uma listagem cont�m determinado status:
+
+expect(@tasks.itens.first).to have_content status_tarefa
+
+> Trabalhando com escopo: ('#navbar a[href="/descri��oScript"]') Neste caso o pai tem um id que chama 'navbar' e peguei o 'a' filho que faz refer�ncia ao elemento que quero!
+
+> Configurar URL com par�metros e queries:
+
+# features/pages/account/account_page.rb
+class AccountPage < SitePrism::Page
+  set_url "/accounts"
+  set_url "/account{/account_id}"
+  set_url "/accounts{?account_query*}"
+end
+
+# features/step_definitions/account/account_steps.rb
+account_page = AccountPage.new
+
+When(/^I visit the account page$/) do
+  account_page.load #=> http://app_host/accounts
+  # Load com par�metros e query
+  account_page.load(account_id: 123) #=> http://app_host/account/123
+  account_page.load(account_query: {'city': 'florianopolis', 'status': 'active'}) #=> http://app_host/accounts?city=florianopolis&status=active
+
+> Page Object (Site Prism) - Section
+Section � quando tenho uma p�gina comum a todas as outras, logo essa p�gina comum � sess�o para as outras, por exemplo, uma barra de menus que n�o muda ao mudar de tela.
+Ex.: class BarraMenuSuperior < SitePrism::Section
+
+> Trabahando com 'Select': 
+Criar vari�vel (ex.: 'combo_cargo), recebendo o elemento do tipo select.
+combo_cargo = find('select[name$=job]')
+Buscar no elemento a op��o que contenha o texto necess�rio, e dar um select_option para o selenium selecionar:
+combo_cargo.find('option', text: cargo).select_option
+ou
+combo_cargo.find('option[value="2"]').select_option
+ou
+find('option[value="2"]').select_option
+
+OUTRA FORMA:
+select 'opcao', from: 'elemento'
+Exemplo: uma lista de cores, onde o css � 
+<select id="dropdown...">
+   <option value="preto">
+   <option value="branco">...
+select 'preto', from 'dropdown'
+
+> Clicar em elemento passando o texto:
+
+find('.desc', text: 'descri��o_texto').click
+
+> Auto Complete:
+find('#idauto').set 'Minas'
+find('ul',text:'Minas Gerais').click
+#primeiro clico no combo, depois na op��o que foi exibida ao digitar 'Minas'
+CSS: <input id="idauto"...>
+	<ul id="autocomplete-option...">
+
+
+> Usar CSS at� mesmo para id e name: como buscar com JQuery -> $('input[name$=company]'); Significa que � para buscar um campo do tipo input que contenha um name que termine com 'company'
+
+> Para campo do tipo senha: para inspecionar o elemento pode pegar o 'type' (apenas quando existir apenas um campo do tipo senha na tela!)
+
+> Para id din�mico: no id dinamico na maioria dos casos, tem uma descri��o que sempre repete, ent�o � s� pegar com express�o regular essa descri��o do campo: ex.: ('button[id*=nomeDaParteDoCampo');
+O '*' 
+
+EXPRESS�O REGULAR:
+* -> traz parte do nome que 'contenha' o valor que vem depois do asterisco, a express�o que vc quer pegar pode estar no in�cio, meio ou fim do nome, n�o importa.
+Ex.: ('button[id*=btnLogin]'): se o id do campo for '54544btnLogin1391984' vai trazer s� 'btnLogin'
+
+^ -> traz parte do nome que esteja no in�cio do nome do campo.
+Ex.: ('button[id^=btnLogin]'): se o id do campo for 'btnLogin1391984' vai trazer s� 'btnLogin'
+
+$ -> traz parte do nome que esteja no final do nome do campo.
+Ex.: ('button[id$=btnLogin]'): se o id do campo for '4542454542btnLogin' vai trazer s� 'btnLogin'
+
+COMANDOS CMDER:
+> Para executar s� uma tag: cucumber -t @nomeTag
+> Para executar s� uma feature: cucumber features/specs/auth/login.feature
+> Para executar uma feature dentro de uma pasta: cucumber features/specs/cadastro (s�o o nome das pastas)
+
+> Todas as vezes que tiver um t�tulo ou texto na tela, usar para inspecionar 'h3, h1, etc'.
+
+TAGUEAR CEN�RIOS CR�TICOS
+> Para cen�rios cr�ticos, colocar @smoke
+
+> for each:
+def nova(tarefa,tags)
+	input_titulo.set tarefa[titulo]
+	input_titulo.set tarefa[data]
+
+	tags.each do |tag|
+		input _tags.set tag[tag] #aqui insere o valor da tag, tem que colocar [tag] sen�o traz o objeto todo
+		input_tags.send_keys :tab #aqui d� um click no tab do teclado para inserir a proxima tag
+	end
+end
+
+> for each para buscar um elemento para excluir:
+
+def apagar_por_nome(titulo)
+	itens.each do |linha|
+		if linha.text.include?(titulo)
+			linha.find('#delete-button').click
+		end
+	end
+end
+
+No step:
+Quando('eu solicito a exclus�o desta tarefa') do
+	@tasks.apagar_por_nome(@tarefa_para_remover['titulo'])
+
+> Asserts para quantidade de elemento:
+page.assert_selector('p#foo', count: 4)
+page.assert_selector('p#foo', maximum: 10)
+page.assert_selector('p#foo', minimum: 1)
+page.assert_selector('p#foo', between: 1..10)
+
+> Verificar se existe um elemento ou um item em uma lista ou tela:
+expect(@tasks.itens).not_to have_content 'oi'
+
+Ao contr�rio, verificar se cont�m:
+expect(@tasks.itens).to have_content 'oi'
+
+Outra forma: @tasks.itens.include? (@tarefa) #@tarefa � uma vari�vel
+
+> 'push' � para adicionar valores em um array
+
+> copiar e colar:
+div_text = find('#some-div').text()
+find('#my-input').set(div_text)
+
+-------------------------------------------
+
+
+
+
+-- 
+Isabela de Oliveira
+2 anexos
+	
+Clique aqui para Responder ou Encaminhar
+9,51 GB (63%) de 15 GB usados
+Gerenciar
+Termos de Servi�o - Privacidade
+�ltima atividade da conta: H� 0 minutos
+Detalhes
+
+https://msdn.microsoft.com/pt-br/library/dn593700.aspx
+https://msdn.microsoft.com/pt-br/library/dn593699.aspx
+https://blogs.msdn.microsoft.com/luizmacedo/2016/05/25/executando-testes-cross-browser-com-coded-ui-e-selenium-integrados/
+http://keeptesting.com.br/2014/11/05/dicas-avancadas-de-ruby-capybaracucumber/
+
+--------------------------------------------
+
+TESTE AUTOMATIZADO API:
+
+https://github.com/thiagomarquessp/httpartyforall
+Outros:
+https://github.com/thiagomarquessp/dia-a-dia-capybara
+
+RODANDO O NEWMAN (POSTMAN POR LINHA DE COMANDO PARA INTEGRA��O CONT�NUA)
+http://agiletesters.com.br/topic/1270/automatizando-testes-de-apis-rest-com-postman-e-newman/2
+
+--------------------------------------------
+
+User Stories:
+
+Ator � O propriet�rio da User Story. De forma simplista � o usu�rio, o interessado naquela funcionalidade. Mas � recomendado descrever de forma espec�fica quem � o ator para ser mais f�cil identificar o contexto da hist�ria dentro do sistema.
+
+A��o � � o que o ator quer fazer. Utilizando aquela a��o ele espera alcan�ar seu objetivo dentro do sistema. 
+
+Funcionalidade � � o que o ator espera que aconte�a ao realizar a a��o. Ou seja, � o resultado de executar a a��o segundo a �tica do ator. Tamb�m pode ser visto como justificativa.
+
+Script comportamento:
+
+Given (Dado) descreve uma pr�-condi��o existente do estado de software antes de come�ar o comportamento que voc� est� especificando. A se��o When (Quando) � o pr�prio comportamento. O Then (Ent�o) descreve o resultado esperado do comportamento.
+
+
+---------------------------------------
+
+visit �https://google.com.br� � Para visitar alguma url.
+
+page.find(:id, �id do elemento�).click � Clica em um elemento definido por ID.
+page.find(:css, �css do elemento�).click � Clica em um elemento definido por CSS.
+page.find(:xpath, �xpath do elemento�).click � Clica em um elemento definido por XPATH.
+
+page.all(:id, �id do elemento�)[0].click � Clica no primeiro elemento dentro de uma lista definido por ID.
+page.all(:css, �css do elemento�)[0].click � Clica no primeiro elemento dentro de uma lista definido por CSS.
+page.all(:xpath, �xpath do elemento�)[0].click � Clica no primeiro elemento dentro de uma lista definido por XPATH.
+
+PS: Quando nos depararmos com um checkbox, radiobutton, utilizar da seguinte forma:
+
+page.find(:radio_button, �nome do radiobutton�).set(true) � Nesse caso, ele vai selecionar aquele radiobutton.
+page.find(:checkbox, �nome do checkbox�).set(true) � Nesse caso, ele vai selecionar aquele checkbox.
+
+fill_in �nome do elemento para inserir valor�, :with => �Aprendendo Capybara� � Ir� inserir no elemento a string Aprendendo Capybara.
+
+select �Nome do item no Drop Down�, from: �nome do elemento drop down� � Seleciona um item de um drop down.
+ex: select �Apto�, from �tipo_moradia�
+
+click_button �Cadastrar� � Clic no bot�o cadastrar.
+
+click_link �Home� � Clica no link Home caso haja algum na p�gina.
+
+expect(page).to have_content �Cadastro efetuado com sucesso� � Procura a mensagem e caso tenha, ser� sucesso.
+
+----------------------------------
+
+Poltergeist: driver headless de automa��o de teste
+PhantomJS: navegador headless
+
+-------------------------
+
+$("[href='/Catalogo/Conta/Login']")
+$("[href='/Catalogo/Conta/Login']" ).find( ".topoDeslogado login")
+$('.meuspedidos span') -> pega o valor de '<span>' da classe 'meus pedidos'
+
+Quando o nome da classe for duplo com espa�o, colocar no jquery o nome junto e um ponto antes de cada parte do nome:
+Ex.: nome da classe: <a class = "topoDeslogado login">
+Jquery: $('.topoDeslogado.login')
+
+-------------------------------------
+CAPYBARA NAVEGANDO ENTRE P�GINAS:
+
+# Visitar a p�gina desejada.
+visit "https://orangehrm-demo-6x.orangehrmlive.com/auth/login"
+
+# Podemos verificar se est� na p�gina correta com a fun��o have_current_path.
+expect(page).to have_current_path(Urls[target], url: true)
+# url: true -> ele compara a url toda, sem isso ele compara uma parte.
+
+# Podemos deixar o env.rb j� a url padr�o configurada.
+Capybara.app_host = "https://orangehrm-demo-6x.orangehrmlive.com"
+
+# Visitar a sub-url /auth/login.
+visit "/auth/login"
+
+CAPYBARA A��ES:
+
+# Faz o clique no link com o texto "Save".
+click_link 'Save'
+
+# Faz o clique no Bot�o com o texto "awesome".
+click_button 'awesome'
+
+# Faz o clique no Bot�o ou Link com testo "Save".
+click_link_or_button 'Save'
+
+# Preenche o texto com "Content" no campo "Name".
+fill_in 'Name', with: 'Content'
+
+# Seleciona o Checkbox
+check 'Content'
+# Remove a Sele��o o Checkbox
+uncheck 'Content'
+
+# Selecionar o checkbox que n�o � clic�vel
+Exemplo: neste caso abaixo o id do checkbox t� dentro de uma 'label'
+css: <input type="checkbox" id="teste" name="bla">
+
+check('teste', allow_label_click: true)
+
+Estou dizendo que essa label agora pode ser clic�vel!! allow = permitir
+Para desmarcar:
+check('teste', allow_label_click: true)
+
+# Selecionar o Radio button
+choose 'Content'
+
+# Selecionar o radio button que n�o � clic�vel
+Exemplo: neste caso abaixo o id do radio t� dentro de uma 'label'
+css: <input type="radio" id="teste" >
+
+choose('teste', allow_label_click: true)
+Estou dizendo que essa label agora pode ser clic�vel!! allow = permitir
+
+# Seleciona a op��o pela Texto "Label".
+select 'Option', from: 'Label'
+
+Aplicado as a��es sobre o elemento, � o modo mais comum de fazer, voc� pode primeiro procurar o Elemento e depois aplicar a a��o. A segunda forma � buscar o elemento e na mesma linha aplicar a��o sobre o elemento:
+
+# Procura o elemento via CSS e efetuar o Clique no Elemento Web.
+# HTML Elemento: <input id="btn_login">
+# CSS Selector => #btn_login
+
+Elemento= find("#btn_login")
+Elemento.click
+
+# Segunda op��o � fazer tudo na mesma linha.
+find("#btn_login").click
+
+# Terceira forma seria colocar o seletor dentro de uma vari�vel global, o $ (Dollar) em ruby quer dizer que � uma vari�vel Global.
+$login = "#btn_login"
+find($login).click
+
+# Muitas pessoas usam o SitePrism, o que o siteprism faz, ele auto-mapea o elemento ou seja voc� informa o nome do elemento e o Selector. Pra isso � preciso importar o siteprism e configurar ele.
+
+element :login, '#btn_login'
+
+# voc� mapeou o elemento pelo siteprism ent�o agora � somente usar a fun��o sobre o nome que voc� deu.
+login.click
+
+# O siteprism seria semelhante uma fun��o aonde voc� mapea o elemento, como no exemplo abaixo.
+
+def login
+  find("#btn_login")
+end
+
+
+Outra forma seria indicar o selector do elemento e  mais um atributo como o conte�do do elemento, no caso de but�o tipo span.
+# Nesse caso adicionamos mais um atributo que � o texto/conte�do do elemento.
+
+find('span.clickable-text', :text => 'Click me').click
+
+** Uma observa��o � que o find o padr�o � via CSS Selector, para fazer via xpath, voc� precisa indicar que � um xpath como no exemplo abaixo: 
+
+find(:xpath, '//a')
+
+---------------------------------
+Lista de elementos que podem ser adicionados ao find:
+Options Hash (options):
+
+text (String, Regexp) � Only find elements which contain this text or match this regexp
+
+
+:all - same as false; finds visible and invisible elements.
+:hidden - only finds invisible elements.
+:visible - same as true; only finds visible elements.
+
+function visible (Boolean, Symbol) � Only find elements with the specified visibility:
+          true - only finds visible elements.
+          false - finds invisible and visible elements.
+
+count (Integer) � Exact number of matches that are expected to be found
+maximum (Integer) � Maximum number of matches that are expected to be found
+minimum (Integer) � Minimum number of matches that are expected to be found
+between (Range) � Number of matches found must be within the given range
+exact (Boolean) � Control whether `is` expressions in the given XPath match exactly or partially
+wait (Integer) � default: Capybara.default_max_wait_time � The time to wait for element count expectations to become true
+
+
+Exemplos: 
+find("#btn_login", :visible => true).click # procura somente o elemento que est� visivel.
+find("#btn_login", :visible => false).click # procura somente o elemento que est� invisivel.
+find("#btn_login", :hidden => true).click # procura o elemento que esta oculto.
+find("#btn_login", :all => true).click # procura ambos os elementos oculto e visiveis.
+find("#btn_login", :wait => 10).click # altera o timeout interno pra 10 segundos.
+
+----------------------------------
+Enviamos comandos do teclado atrav�s da fun��o "send_keys" (sem aspas duplas) em seguida o simbolo com o nome do teclado :enter
+
+# enviando dados via send_keys
+element.send_keys "foo"   # Deve preencher o campo com 'foo'.
+
+# enviando comandos do teclado agora como enter e outros.
+element.send_keys :enter
+element.send_keys "tet", :left, "s"   #=> value: 'test'
+element.send_keys [:control, 'a'], :space   # Nesse caso envia um conjunto de comandos, que vai limpar o conte�do.
+
+# ou 
+
+find('.myselector_name>input').native.send_keys(:return) # vai realizar um enter sobre o elemento.
+
+# Inserir um arquivo.
+attach_file Rails.root.join('spec/fixture/some_file.png')
+---------------------------
+Capybara Finders (Usando a Busca do elemento no Capybara).
+
+# Procura todos os elementos via xpath.
+all(:xpath, '//a')
+
+# Procura todos os elementos via css.
+all(:css, 'a')
+
+# Procura todos os elementos via css, e selecionar somente o primerio.
+all(:css, 'a')[1]
+
+# Procura o primeiro elemento que encontrar via xpath.
+first(:xpath, '//a')
+
+# Procura o primeiro elemento que encontrar via css.
+first(:css, 'a').click
+
+# Procura o elemento elemento via xpath que tem o atributo id. 
+find('//textarea[@id="additional_newline"]')
+
+# Procura o elemento elemento via xpath que tem o atributo id e o checked. 
+find(:xpath, "//input[@id='form_pets_dog']")['checked']
+# => true
+
+# Procura o elemento via css e ativa o focus sobre o elemento.
+find(:css, '#with_focus_event').trigger(:focus)
+find(:css,'.wrapper').hover
+
+# Procura o elemento e traz o valor.
+find_field("test_field").value
+# => 'blah'
+
+# Procura o elemento e traz a tag do elemento.
+find_by_id('red').tag_name
+# => 'a'
+
+# Procura o elemento invis�vel pelo atributo id. 
+find_by_id("hidden_via_ancestor", visible: false)
+
+# Procura o but�o pelo nome e traz o atributo value(texto).
+find_button('What an Awesome')[:value]
+# => 'awesome'
+
+# Procura o elemento link pelo nome e traz o texto.
+find_link('abo').text
+# => 'labore'
+
+# Procura o elemento link pelo nome e traz o href(caminho do link).
+find_link('other')[:href]
+# => '/some_uri'
+
+# Procura todos os elementos com a tag a, e faz um for para trazer o href dos elementos. 
+all('a').each { |a| a[:href] }
+
+# Procura um elemento pela class bar(.) dentro do elemento ID foo(#). 
+find('#foo').find('.bar')
+
+# busca o primeiro n� que � um texto
+node = page.find('span', text: string)
+# volta para o elemento antecessor via xpath e procura a tag input para poder dar o click.
+node.find(:xpath, '..').find('input[name="tipoBusca"]').click
+
+# usando o a funcao ancestor, melhor que o uso do xpath.
+node = page.find('span', text: string)
+node.ancestor('tr').find('input[name="tipoBusca"]').click
+--------------------------------
+
+Capybara localizando Escopo within:
+
+within(search_form) do
+  fill_in 'Name', with: 'iOS 7'
+  click_button 'Search'
+end
+
+def search_form
+  '.search_form'
+end
+
+within_fieldset("villain_fieldset") do
+  # ...
+end
+
+within_table(elemento) do
+  # ...
+end
+# Execute um bloco de c�digo em um determinado iframe/frame pelo nome ou o �ndice do quadro fornecido. Fora do bloco ele volta para o contexto inicial da p�gina (fun��o usada <b>within_frame</b>).
+# within_frame('some_frame') do CODE end
+# within_frame 0 do CODE end
+  def check_balance
+    visit('/')
+
+    within_frame('main'){
+      fill_in 'korisnik', :with => 'foo'
+      fill_in 'lozinka', :with => 'bar'
+      click_button 'Potvrda unosa'
+    }
+
+    within_frame('header'){
+      click_on 'Stanje' 
+    }
+  end
+
+# Iframe dentro de iframe podemos fazer assim.
+within_frame 0 do
+  within_frame 0 do
+    within_frame 0 do
+      # Code
+    end
+  end
+end
+
+within_frame(elemento)do
+
+end
+
+# sem o within_frame, podemos fazer com a fun��o switch_to.
+
+ def check_balance
+    visit('/')
+    # Vai trocar do contexto inicial para o frame header.
+    page.driver.browser.switch_to.frame 'header'
+    click_on 'Stanje' 
+
+    # Vai trocar o frame header para o contexto inicial da p�gina.
+    page.driver.browser.switch_to.default_content
+    
+    # Vai trocar do contexto inicial para o frame main. 
+    page.driver.browser.switch_to.frame 'main'
+    # Vai trocar do frame Pai main para o subframe subframe_main. 
+    page.driver.browser.switch_to.frame 'subframe_main'
+    fill_in 'korisnik', :with => 'foo'
+    fill_in 'lozinka', :with => 'bar'
+    click_button 'Potvrda unosa'
+  end
+
+# Uma coisa legal que podemos fazer procurar o iframe, para depois mudar com o switch_to.
+facebok_iframe_name = find(:xpath, "//*[@id='fb-button-explore']/span/iframe")[:name]
+page.driver.browser.switch_to.frame facebok_iframe_name 
+
+-------------------------------
+
+Capybara Common:
+
+within(search_form) do
+  fill_in 'Name', with: 'iOS 7'
+  click_button 'Search'
+end
+
+def search_form
+  '.search_form'
+end
+
+within_fieldset("villain_fieldset") do
+  # ...
+end
+
+within_table("some_table") do
+  # ...
+end
+# Execute um bloco de c�digo em um determinado iframe/frame pelo nome ou o �ndice do quadro fornecido. Fora do bloco ele volta para o contexto inicial da p�gina (fun��o usada <b>within_frame</b>).
+# within_frame('some_frame') do CODE end
+# within_frame 0 do CODE end
+  def check_balance
+    visit('/')
+
+    within_frame('main'){
+      fill_in 'korisnik', :with => 'foo'
+      fill_in 'lozinka', :with => 'bar'
+      click_button 'Potvrda unosa'
+    }
+
+    within_frame('header'){
+      click_on 'Stanje' 
+    }
+  end
+
+# Iframe dentro de iframe podemos fazer assim.
+within_frame 0 do
+  within_frame 0 do
+    within_frame 0 do
+      # Code
+    end
+  end
+end
+
+
+# sem o within_frame, podemos fazer com a fun��o switch_to.
+
+ def check_balance
+    visit('/')
+    # Vai trocar do contexto inicial para o frame header.
+    page.driver.browser.switch_to.frame 'header'
+    click_on 'Stanje' 
+
+    # Vai trocar o frame header para o contexto inicial da p�gina.
+    page.driver.browser.switch_to.default_content
+    
+    # Vai trocar do contexto inicial para o frame main. 
+    page.driver.browser.switch_to.frame 'main'
+    # Vai trocar do frame Pai main para o subframe subframe_main. 
+    page.driver.browser.switch_to.frame 'subframe_main'
+    fill_in 'korisnik', :with => 'foo'
+    fill_in 'lozinka', :with => 'bar'
+    click_button 'Potvrda unosa'
+  end
+
+# Uma coisa legal que podemos fazer procurar o iframe, para depois mudar com o switch_to.
+facebok_iframe_name = find(:xpath, "//*[@id='fb-button-explore']/span/iframe")[:name]
+page.driver.browser.switch_to.frame facebok_iframe_name 
+Capybara Common
+visit("http://google.com")
+
+page.current_url
+
+# Imprime o titulo da p�gina.
+puts page.title
+
+# Verifica se o titulo corresponde ao valor "my title".
+page.has_title? "my title"
+
+# Verifica se o titulo "my not found title" n�o existe mais.
+page.has_no_title? "my not found title"
+
+---------------------------------------------
+
+# Quando o script fornecido, n�o retornando um resultado � poss�vel utilizar JQuery. Isso � �til para scripts que retornam objetos complexos:
+page.execute_script("$('#change').text('Funky Doodle')")
+#inserir uma data em um campo de data, que n�o consegui inserir o foco no inicio, com isso a data ficava desconfigurada inserindo com capybara:
+page.execute_script("$('#DataNascimento').val('12/06/1987')")
+#dar um scroll na barra de rolagem da p�gina: neste caso ele desce at� o valor que corresponde a 1500 pixels
+page.execute_script("window.scrollBy(0,1500)")
+
+#Mostrar no terminal(cmder) a soma de dois valores por exemplo:
+@result = page.evaluate_script("1+3")
+puts @result
+# => 4
+
+using_wait_time 6 do
+  # ... mudar Capybara.default_wait_time somente no escopo deste bloco 
+end
+
+--------------------------
+Usando o Capybara com o RSpec:
+A biblioteca do RSpec 2+ � supportado adicionando ao arquivo env.rb o require 'capybara/rspec'. O RSpec n�o � padr�o no Capybara puro,
+ou seja voc� tem que adicionar a biblioteca 'capybara/rspec'.
+expect(page).to have_content("Some Content")
+expect(page).to have_no_content("Some Content")
+
+# True if there is a anchor tag with text matching regex
+expect(page).to have_xpath("//a")
+expect(page).to have_xpath("//a",:href => "google.com")
+expect(page).to have_xpath("//a[@href => 'google.com']")
+expect(page).to have_xpath("//a[contains(.,'some string')]")
+expect(page).to have_xpath("//p//a", :text => /re[dab]i/i, :count => 1)
+
+ # can take both xpath and css as input and can take arguments similar to both have_css and have_xpath
+ expect(page).to have_selector(:xpath, "//p/h1")
+ expect(page).to have_selector(:css, "p a#post_edit_path")
+
+ expect(page).to have_css("input#post_title")
+ expect(page).to have_css("input#post_title", :value => "Capybara cheatsheet")
+
+ # True if there are 3 input tags in response
+ expect(page).to have_css("input", :count => 3)
+
+ # True if there or fewer or equal to 3 input tags
+ expect(page).to have_css("input", :maximum => 3)
+
+ # True if there are minimum of 3 input tags
+ expect(page).to have_css("input", :minimum => 3)
+
+ # True if there 1 to 3 input tags
+ expect(page).to have_css("input", :between => 1..3)
+
+ # True if there is a anchor tag with text hello
+ expect(page).to have_css("p a", :text => "hello")
+ expect(page).to have_css("p a", :text => /[hH]ello(.+)/i)
+
+# For making capybara to take css as default selector
+Capybara.default_selector = :css
+
+# checks for the presence of the input tag
+expect(page).to have_selector("input")
+
+# checks for input tag with value
+expect(page).to have_selector("input", :value =>"Post Title")
+
+expect(page).to have_no_selector("input")
+
+# For making capybara to take css as default selector
+Capybara.default_selector = :xpath
+# checks for the presence of the input tag
+expect(page).to have_selector("//input")
+
+# checks for input tag with value
+expect(page).to have_selector("//input", :value =>"Post Title")
+
+# checks for presence of a input field named FirstName in a form
+expect(page).to have_field("FirstName")
+
+expect(page).to have_field("FirstName", :value => "Rambo")
+expect(page).to have_field("FirstName", :with => "Rambo")
+
+expect(page).to have_link("Foo")
+expect(page).to have_link("Foo", :href=>"googl.com")
+expect(page).to have_no_link("Foo", :href=>"google.com")
+
+# Verifica se tem o css selector, que tem o campo com visibilidade igual a falso. 
+expect(page).to have_selector('#selector_id', visible: false)
+----------------------------
+
+Capybara Matchers (Assert)
+
+# Voc� n�o precisa usar o rpect/expect como biblioteca de teste unit�rio, o pr�prio Capybara tem um modulo chamado Matchers para<br> realizar os asserts acredito que como ele usa os m�todos internos do capybara/selenium, � mais r�pido em alguns milisegundos.
+
+page.assert_selector('p#foo', :count => 4)
+page.assert_selector('li', :text => 'Horse', :visible => true)
+page.assert_all_of_selectors(:custom, 'Tom', 'Joe', visible: all)
+page.assert_all_of_selectors(:css, '#my_div', 'a.not_clicked')
+
+page.assert_none_of_selectors(:custom, 'Tom', 'Joe', visible: all)
+page.assert_none_of_selectors(:css, '#my_div', 'a.not_clicked')
+
+# Para verificar se existe um determina Locator na tela usamos o has_css?, passando o nome o locator com ou sem argumentos adicionais.
+page.has_css?('li', :text => 'Horse', :visible => true)
+# Para fazer o inverso da fun��o acima usamos has_no_css?.
+page.has_no_css?('li', :text => 'Horse', :visible => true)
+
+# Para verificar se existe um determina link na tela usamos o has_link?, passando o nome do link.
+page.has_link?("Create a New Article")
+
+# Para verificar se existe um determina texto na tela usamos o has_content? ou o has_text?, passando o valor do texto.
+page.has_text?('lorem ipsum')
+# Para fazer o inverso da fun��o acima usamos has_no_text?.
+page.has_no_text?('lorem ipsum')
+
+page.has_xpath?('.//li', :text => 'Horse', :visible => true)
+page.has_selector?('li', :text => 'Horse', :visible => true)
+page.has_no_select?('li', :text => 'Horse', :visible => true)
+page.has_field?('Name', :with => 'Jonas')
+
+-------------------------------
+
+Capybara Browser functions:
+# Para mudar para uma outra janela, ou seja  mudar de contexto de uma janela inicial para a �ltima aberta, 
+# Precisamos encontrar a ultima janela com a fun��o window_handles.last e mudar para a atual com a fun��o switch_to.
+popup = page.driver.browser.window_handles.last
+page.driver.browser.switch_to.window(popup)
+# Podemos voltar para a primeira janela.
+main = page.driver.browser.window_handles.first
+page.driver.browser.switch_to.window(main)
+-----------------------------
+
+Capybara Configura��es.
+No Capybara temos somente a espera interna dele, podemos mudar a espera para 30 segundos, como fizemos no exemplo abaixo.
+
+# mudando a espera interna para 30 segundos.
+Capybara.default_max_wait_time = 30
+
+# Segunda forma de setar v�rias configura��es.
+Capybara.configure do |config|
+  config.run_server = false
+  config.app_host   = 'http://www.google.com'
+  config.default_max_wait_time = 30
+  config.default_selector = :css
+end
+
+----------------------------
+Tratamento de erro com 'rspec/retry'.
+RSpec.configure do |config|
+  # show retry status in spec process
+  config.verbose_retry = true
+  # Try twice (retry once)
+  config.default_retry_count = 2
+  # Only retry when Selenium raises Net::ReadTimeout
+  config.exceptions_to_retry = [Net::ReadTimeout]
+  Capybara.javascript_driver = :webkit
+end
+
+----------------------------
+Colocando o mouse sobre o elemento, temos algumas formas mostradas abaixo:
+Forma mais simples � usando a fun��o "hover", pra isso precisamos habilitar o natives_events na inst�ncia do browser.
+# configurando o native_events como true.
+Capybara.register_driver :selenium do |app|
+  profile = Selenium::WebDriver::Firefox::Profile.new
+  profile.native_events = true
+  Capybara::Selenium::Driver.new(app, :browser => :firefox, profile: profile)
+end
+
+# agora somente usar o hover, para simular o mouse sobre o elemento.
+find('.some_class').hover
+pousar o mouse sobre o elemento e clicar:
+find('.some_class').hover.click
+
+A segunda forma � trigger/ativar o evento mouseover, nesse caso n�o precisamos do native_events, mas precisamos habilitar o webkit.
+RSpec.configure do |config|
+  # ...
+  Capybara.javascript_driver = :webkit
+end
+
+# ativando o mouseover.
+page.find('#element').trigger(:mouseover)
+# tamb�m podemos trigger o mouseenter
+page.find('#element').trigger(:mouseenter)
+
+**O uso da "page" nas vers�es novas n�o � necessaria.
+
+
+#Muda o foco para um elemento mapeado:
+WITHIN(ELEMENTO)DO
+END
+
+Muda o foco para um Iframe:
+CSS: <iframe id="id_do_iframe" class="teste" ...>
+
+within_frame('id_do_iframe') do
+	#aqui dentro as a��es dentro do iframe!
+	#cliques, preenchimentos, etc
+end
+
+Muda o foco para uma tabela:
+WITHIN_TABLE(ELEMENTO) DO
+END
+
+Mudar o foco para um modal:
+within('#teste')do
+end
+... onde '#teste' � o id do modal, nesse caso como usei o within puro tenho que colocar # para o tipo do elemento que equivale o modal que � um 'id'
+-----------------------------
+*EXEMPLO DE EACH
+class AccountPage < SitePrism::Page
+  set_url "/accounts"
+
+  element :account_name, '#account-name'
+  element :save_button, "input[name='save-btn']"
+  element :account_language, '.account-language'
+
+  elements :external_accounts, 'li.list-group-item .accounts-title'
+end
+
+# features/step_definitions/account/account_steps.rb
+account_page = AccountPage.new
+
+Then(/^I see the external accounts name$/) do
+  account_page.external_accounts.first.text # => Google Analytics
+  account_page.external_accounts.last.text # => Twitter
+  account_page.external_accounts.each { |name| puts name.text } # => 'Google Analytics', 'Twitter', 'Facebook', 'LinkedIn'
+
+  accounts_names = account_page.external_accounts.map { |name| name.text }
+  expect(accounts_names).to eq ['Google Analytics', 'Twitter', 'Facebook', 'LinkedIn']
+end
+
+
+---------------
+APAGAR CONTE�DO DE CAMPO:
+
+elemento.send_keys[:control, 'a'], :space #apaga valor do campo selecionando todo o conte�do com ctrl+a e depois d� um space para apagar
+
+------------------------------
+
+ou vc consigura o driver do selenium  dentro do arquivo env.rb assim
+
+
+
+Capybara.register_driver :selenium do |app|
+  option = ::Selenium::WebDriver::Chrome::Options.new(args: ['--start-maximized', '--disable-infobars' ] )
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: option)
+end
+ 
+Capybara.configure do |config|
+  config.default_driver = :selenium
+  config.app_host = CONFIG['url']
+end
+
+ou assim
+
+voce pode rodar antes do projeto comecar pra que fique com a tela maximizada
+
+  Before  do   
+ 
+    page.driver.browser.manage.window.maximize
+    
+  end
+
+
+XPATH
+
+N�S
+/ Seleciona do n� raiz
+// Seleciona n�s no documento a partir do n� atual em que corresponde � sele��o , n�o importa onde ele esteja
+. Seleciona o n� atual
+.. Seleciona o pai do n� atual
+@ Seleciona atributos
+
+PREDICADOS
+Usados para selecionar n� espec�fico ou n� que cont�m atributos, sempre em Colchetes
+/BOOKSTORE/BOOK[1] SELECIONA O PRIMEIRO ELEMENTO DO LIVRO QUE � O FILHO DO ELEMENTO DA LIVRARIA.
+/BOOKSTORE/BOOK[LAST ()] SELECIONA O �LTIMO ELEMENTO DO LIVRO QUE � O FILHO DO ELEMENTO DA LIVRARIA
+/BOOKSTORE/BOOK[LAST() -1] SELECIONA O �LTIMO, MAS UM ELEMENTO DE LIVRO QUE � O FILHO DO ELEMENTO DA LIVRARIA
+/BOOKSTORE/BOOK[POSITION () <3] SELECIONA OS DOIS PRIMEIROS ELEMENTOS DO LIVRO QUE S�O FILHOS DO ELEMENTO DA
+LIVRARIA
+
+https://medium.com/automa%C3%A7%C3%A3o-com-batista/aprenda-por-definitivo-a-usar-css-selector-adeus-xpath-1f3956763c2
+//TITLE[@LANG] SELECIONA TODOS OS ELEMENTOS DO T�TULO QUE POSSUEM UM ATRIBUTO CHAMADO LANG
+//TITLE[@LANG='EN'] SELECIONA TODOS OS ELEMENTOS DE T�TULO QUE POSSUEM UM ATRIBUTO "LANG" COM UM VALOR "EN"
+/BOOKSTORE/BOOK[PRICE>35.00] SELECIONA TODOS OS ELEMENTOS DO LIVRO DO ELEMENTO DA LIVRARIA QUE T�M UM
+ELEMENTO DE PRE�O COM UM VALOR MAIOR QUE 35,00
+/BOOKSTORE/BOOK[PRICE>35,00]/TITLE SELECIONA TODOS OS ELEMENTOS DE T�TULO DOS ELEMENTOS DO LIVRO DO ELEMENT
+-----------------------
+
+SELE��O POR CLASSE( .CLASSE )
+ENCONTRAR UM ELEMENTO PELO NOME DA CLASSE BASTA COLOCAR O VALOR DA CLASSE COM UM PONTO �.� NA FRENTE OU COLOCAR A �
+TAG.CLASSE�.
+SELE��O POR ID( #IDENTIFICADOR )
+ENCONTRAR UM ELEMENTO POR ID BASTA COLOCAR O VALOR DO ATRIBUTO ID COM UM # NA FRENTE.
+SELE��O POR ELEMENTOS( DIV )
+SELECIONA TODOS OS ELEMENTOS <P> ONDE O PAI � UM ELEMENTO <DIV>.
+SELE��O POR ATRIBUTO(ELEMENTO[ATRIBUTO=�VALOR�])
+SELECIONA TODOS OS ELEMENTOS COM UM ELEMENTO E UM ATRIBUTO DE DESTINO.
+SELE��O POR FILHO( :FIRST-CHILD )
+SELECIONA O ELEMENTO <P> QUE � O PRIMEIRO FILHO DE SEU PAI.
+SELE��O POR PRIMEIRO ELEMENTO( :FIRST-OF-TYPE )
+SELECIONA O ELEMENTO <P> QUE � O PRIMEIRO ELEMENTO DE SEU PAI.
+-----------------------
+INSPECIONAR 
+
+#busca todos elementos na pagina que contenham o all
+page.all(:css, '.btn')
+#busca um elemento mapeado
+find('#teste')
+find_by_id('teste')
+find_button(class: 'btn waves_light')
+#busca primeiro bot�o que tenha a classe .btn
+first('.btn')
+#busca um link
+find_link(href: 'https://...')
+
+CLIQUES
+#clica em links e bot�es - � a mesma coisa q o comando 'click_link_or_button'
+click_on('Texto do bot�o')
+click_link('Texto do link')
+click_button('elemento_mapeado')
+ex.:
+click_button(class: 'btn waves...')
+#duplo clique:
+find('elemento_mapeado').double_click
+#clicar_com_bot�o_direito:
+find('elemento_mapeado').right_click
+find('ul', text: 'Minas Gerais').click
+
+PREENCHER FORMULARIOS:
+fil_in(id: 'elemento_id', with: 'isabela')
+find('#id').set('isabela')
+find('#id').send_keys('isabela')
+
+----------------------------
+* Manipula��o de Janelas:
+
+WITHIN_WINDOW --ALTERNA PARA A JANELA FORNECIDA
+EXECUTA O BLOCO ESPECIFICADO
+TROCA DE VOLTA
+SWITCH_TO_WINDOW -- RETORNA A JANELA QUE FOI TROCADA PARA
+WINDOW_OPENED_BY -- OBTER A JANELA QUE FOI ABERTA PELO BLOCO PASSADO.
+CURRENT_WINDOW � RETORNA A JANELA ATUAL
+OPEN_NEW_WINDOW -- ABRE NOVA JANELA
+WINDOWS � OBTER TODAS AS JANELAS ABERTAS
+
+RESIZE_TO 800, 600 � AUMENTA O TAMANHO DA TELA COM A TAMANHO DESEJADO.
+.CLOSE � FECHA UMA JANELA
+.MAXIMIZE � MAXIMIZA UMA JANELA.
+.SIZE � OBTENHA O TAMANHO DA JANELA.
+.CURRENT? �SE ESTA JANELA � A JANELA NA QUAL OS COMANDOS EST�O SENDO EXECUTADOS.
+.CLOSED? � VERIFICA SE A JANELA EST� FECHADA
+.EXISTS? � SE A JANELA N�O EST� FECHADA.
+
+1� OP��O:
+
+#'janela' recebe a janela que ser� aberta pelo link:
+janela = window_opened_by do
+   click_link 'cique aqui'
+end
+#mudar o foco para a 'janela' que � a janela aberta pelo link acima
+within_window janela do
+  
+  expect(current_url).to eql 'http://www...' #verifica se a url atual � a url aberta pelo link
+  #acoes que devem ser feitas na janela 'janela':
+  ...
+  janela.close #fecha a janela
+end
+
+2� OP��O:
+
+  windows.last #mudar para a �ltima aba
+  click_link 'Clique aqui'
+  #mudar para uma determinada janela (switch_to_window), neste caso para a �ltima aba:
+  switch_to_window windows.last	
+  expect(current_url).to eql 'http://www...' #verifica se a url atual � a url aberta pelo link
+  #acoes...
+  windows.last.close
+------------------------------------
+* Alertas :
+
+> Confirma��o:
+find('button[onclick="jsAlert()"]').click #cliquei no botao que abre o alert!
+page.accept_alert #aceitando o alert, dei um 'ok' sem clicar no bot�o ok, atraves deste comando, esse alert � s� de confirma��o
+
+>Cancelamento:
+find('element_que_abre_o_alert').click #cliquei no botao que abre o alert!
+page.dismiss_confirm #cancelar a a��o no alert, neste caso o alert tem duas op��es 'Ok' e 'Cancelar'
+
+>Prompt de comando digitando algo dentro (campo para entrar com valor dentro do alert)
+find('element_que_abre_o_alert').click #cliquei no bot�o que abre o prompt
+
+* Prompt de Comando:
+> Preencher um prompt com um texto:
+	page.assept_prompt(with: 'texto')
+> Cancelar um prompt de comando:
+	page.dismiss_prompt
+
+ACCEPT_ALERT---EXECUTE O BLOCO, ACEITANDO UM ALERTA.
+ACCEPT_CONFIRM---EXECUTE O BLOCO, ACEITANDO UMA CONFIRMA��O.
+DISMISS_CONFIRM---EXECUTE O BLOQUEIO, DISPENSANDO UMA CONFIRMA��O.
+ACCEPT_PROMPT---EXECUTE O BLOCO, ACEITANDO UM PROMPT, RESPONDENDO OPCIONALMENTE AO PROMPT.
+DISMISS_PROMPT---EXECUTE O BLOCO, DISPENSANDO UM PROMPT
+
+------------------------------------------------------
+
+
+
+Capybara.register_driver :selenium do |app|
+  option = ::Selenium::WebDriver::Chrome::Options.new(args: ['--start-maximized', '--disable-infobars' ] )
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: option)
+end
+ 
+Capybara.configure do |config|
+  config.default_driver = :selenium
+  config.app_host = CONFIG['url']
+end
+
+ou assim
+
+voce pode rodar antes do projeto comecar pra que fique com a tela maximizada
+
+  Before  do   
+ 
+    page.driver.browser.manage.window.maximize
+    
+  end
+
+
+XPATH
+
+N�S
+/ Seleciona do n� raiz
+// Seleciona n�s no documento a partir do n� atual em que corresponde � sele��o , n�o importa onde ele esteja
+. Seleciona o n� atual
+.. Seleciona o pai do n� atual
+@ Seleciona atributos
+
+PREDICADOS
+Usados para selecionar n� espec�fico ou n� que cont�m atributos, sempre em Colchetes
+/BOOKSTORE/BOOK[1] SELECIONA O PRIMEIRO ELEMENTO DO LIVRO QUE � O FILHO DO ELEMENTO DA LIVRARIA.
+/BOOKSTORE/BOOK[LAST ()] SELECIONA O �LTIMO ELEMENTO DO LIVRO QUE � O FILHO DO ELEMENTO DA LIVRARIA
+/BOOKSTORE/BOOK[LAST() -1] SELECIONA O �LTIMO, MAS UM ELEMENTO DE LIVRO QUE � O FILHO DO ELEMENTO DA LIVRARIA
+/BOOKSTORE/BOOK[POSITION () <3] SELECIONA OS DOIS PRIMEIROS ELEMENTOS DO LIVRO QUE S�O FILHOS DO ELEMENTO DA
+LIVRARIA
+
+https://medium.com/automa%C3%A7%C3%A3o-com-batista/aprenda-por-definitivo-a-usar-css-selector-adeus-xpath-1f3956763c2
+//TITLE[@LANG] SELECIONA TODOS OS ELEMENTOS DO T�TULO QUE POSSUEM UM ATRIBUTO CHAMADO LANG
+//TITLE[@LANG='EN'] SELECIONA TODOS OS ELEMENTOS DE T�TULO QUE POSSUEM UM ATRIBUTO "LANG" COM UM VALOR "EN"
+/BOOKSTORE/BOOK[PRICE>35.00] SELECIONA TODOS OS ELEMENTOS DO LIVRO DO ELEMENTO DA LIVRARIA QUE T�M UM
+ELEMENTO DE PRE�O COM UM VALOR MAIOR QUE 35,00
+/BOOKSTORE/BOOK[PRICE>35,00]/TITLE SELECIONA TODOS OS ELEMENTOS DE T�TULO DOS ELEMENTOS DO LIVRO DO ELEMENT
+-----------------------
+
+SELE��O POR CLASSE( .CLASSE )
+ENCONTRAR UM ELEMENTO PELO NOME DA CLASSE BASTA COLOCAR O VALOR DA CLASSE COM UM PONTO �.� NA FRENTE OU COLOCAR A �
+TAG.CLASSE�.
+SELE��O POR ID( #IDENTIFICADOR )
+ENCONTRAR UM ELEMENTO POR ID BASTA COLOCAR O VALOR DO ATRIBUTO ID COM UM # NA FRENTE.
+SELE��O POR ELEMENTOS( DIV )
+SELECIONA TODOS OS ELEMENTOS <P> ONDE O PAI � UM ELEMENTO <DIV>.
+SELE��O POR ATRIBUTO(ELEMENTO[ATRIBUTO=�VALOR�])
+SELECIONA TODOS OS ELEMENTOS COM UM ELEMENTO E UM ATRIBUTO DE DESTINO.
+SELE��O POR FILHO( :FIRST-CHILD )
+SELECIONA O ELEMENTO <P> QUE � O PRIMEIRO FILHO DE SEU PAI.
+SELE��O POR PRIMEIRO ELEMENTO( :FIRST-OF-TYPE )
+SELECIONA O ELEMENTO <P> QUE � O PRIMEIRO ELEMENTO DE SEU PAI.
+-----------------------
+INSPECIONAR 
+
+#busca todos elementos na pagina que contenham o all
+page.all(:css, '.btn')
+#busca um elemento mapeado
+find('#teste')
+find_by_id('teste')
+find_button(class: 'btn waves_light')
+#busca primeiro bot�o que tenha a classe .btn
+first('.btn')
+#busca um link
+find_link(href: 'https://...')
+
+CLIQUES
+#clica em links e bot�es - � a mesma coisa q o comando 'click_link_or_button'
+click_on('Texto do bot�o')
+click_link('Texto do link')
+click_button('elemento_mapeado')
+ex.:
+click_button(class: 'btn waves...')
+#duplo clique:
+find('elemento_mapeado').double_click
+#clicar_com_bot�o_direito:
+find('elemento_mapeado').right_click
+find('ul', text: 'Minas Gerais').click
+
+PREENCHER FORMULARIOS:
+fil_in(id: 'elemento_id', with: 'isabela')
+find('#id').set('isabela')
+find('#id').send_keys('isabela')
+
+----------------------------
+WITHIN_WINDOW --ALTERNA PARA A JANELA FORNECIDA
+EXECUTA O BLOCO ESPECIFICADO
+TROCA DE VOLTA
+SWITCH_TO_WINDOW -- RETORNA A JANELA QUE FOI TROCADA PARA
+WINDOW_OPENED_BY -- OBTER A JANELA QUE FOI ABERTA PELO BLOCO PASSADO.
+CURRENT_WINDOW � RETORNA A JANELA ATUAL
+OPEN_NEW_WINDOW -- ABRE NOVA JANELA
+WINDOWS � OBTER TODAS AS JANELAS ABERTAS
+
+RESIZE_TO 800, 600 � AUMENTA O TAMANHO DA TELA COM A TAMANHO DESEJADO.
+.CLOSE � FECHA UMA JANELA
+.MAXIMIZE � MAXIMIZA UMA JANELA.
+.SIZE � OBTENHA O TAMANHO DA JANELA.
+.CURRENT? �SE ESTA JANELA � A JANELA NA QUAL OS COMANDOS EST�O SENDO EXECUTADOS.
+.CLOSED? � VERIFICA SE A JANELA EST� FECHADA
+.EXISTS? � SE A JANELA N�O EST� FECHADA.
+
+janela = 
+
+ACCEPT_ALERT---EXECUTE O BLOCO, ACEITANDO UM ALERTA.
+ACCEPT_CONFIRM---EXECUTE O BLOCO, ACEITANDO UMA CONFIRMA��O.
+DISMISS_CONFIRM---EXECUTE O BLOQUEIO, DISPENSANDO UMA CONFIRMA��O.
+ACCEPT_PROMPT---EXECUTE O BLOCO, ACEITANDO UM PROMPT, RESPONDENDO OPCIONALMENTE AO PROMPT.
+DISMISS_PROMPT---EXECUTE O BLOCO, DISPENSANDO UM PROMPT
+
+---------------------------------------
+* DRAG AND DROP - Arrastar um objeto e soltar para dentro de outro (arrastar com o mouse um objeto na tela para dentro de outro, por exemplo arrastar uma carinha para uma lixeira)
+	@primeiro_elemento = find('element_q_vou_arrastar')
+	@segundo_elemento = find('element_que_vai_receber_o_primeiro_element')
+	@primeiro_elemento.drag_to(@segundo_element)
+
+-----------------------------------------
+CEN�RIOS END-TO-END
+
+A gem do Cucumber por padr�o reseta o browser a cada cen�rio executado, utilizando no env.rb require 'capybara/cucumber', se quiser que continue a partir do ultimo cen�rio executado, utilizar os requires e vari�veis globais abaixo, e comentar o require 'capybara/cucumber':
+
+require 'capybara/dsl'
+require 'capybara/rspec/matchers'
+
+World(Capybara::DSL)
+World(Capybara::RspecMatchers)
+
+
+#usar os dois requires abaixo mais as variaveis globais World abaixo, se ao rodar mais de um cen�rio n�o quiser que o cucumber reset a sess�o. A gem do cucumber reseta o browser a cada cen�rio executado, se quiser que seja assim usar o require 'capybara/cucumber'
+#require 'capybara/dsl'
+#require 'capybara/rspec/matchers'
+
