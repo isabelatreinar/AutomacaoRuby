@@ -1,0 +1,20 @@
+pipeline {
+  agent any
+  stages{
+   stage ('Acceptance Tests')
+    {
+      steps{
+        script {
+          try {
+            sh 'docker-compose up --build --exit-code-from run_at'
+          } catch (e) {
+              currentBuild.result = 'FAILURE'
+              throw e
+          } finally {
+            sh 'docker-compose down'
+          }
+        }
+      }
+    }
+  }
+}

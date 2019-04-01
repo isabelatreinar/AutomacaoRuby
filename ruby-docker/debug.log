@@ -1,0 +1,5 @@
+[0315/172836.171:ERROR:process_info.cc(359)] UncheckedAllocate
+[0315/172836.495:ERROR:process_info.cc(359)] UncheckedAllocate
+[0315/173231.610:ERROR:process_reader_win.cc(123)] NtOpenThread: {Acesso Negado} Um processo solicitou acesso a um objeto, mas o direito de acesso não lhe foi concedido. (0xc0000022)
+[0315/173231.611:ERROR:exception_snapshot_win.cc(88)] thread ID 13468 not found in process
+[0315/173244.410:ERROR:process_info.cc(359)] UncheckedAllocate
