@@ -11,6 +11,7 @@ Quando("confirmo a selecao da data") do
 end
 
 Então("visualizo a data selecionada {string}") do |dataString|
-  expect(page).to have_css(@dataPicker.textoData, text: dataString, visible: false)
-
+  #expect(page).to have_css(@dataPicker.textoData, text: dataString, visible: false)
+  @textData = find('.datepicker-date-display > .date-text')
+  expect(@textData.text).to have_content dataString
 end

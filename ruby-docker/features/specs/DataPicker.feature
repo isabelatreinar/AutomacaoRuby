@@ -13,4 +13,4 @@ Cenário: Selecionar Data
     | Mes          | Abril            |
     | Dia          | 28               |
   E confirmo a selecao da data
-  Então visualizo a data selecionada "Sat, Apr 28"
+  Então visualizo a data selecionada "Apr 28"

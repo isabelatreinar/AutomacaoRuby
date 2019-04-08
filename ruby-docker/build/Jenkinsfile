@@ -6,12 +6,11 @@ pipeline {
       steps{
         script {
           try {
-            sh 'docker-compose up --build --exit-code-from run_at'
+            sh 'docker build -t animacr/automacao_ruby:1.0.0 .'
+            sh 'docker run --rm --name automacao_ruby -v /var/lib/jenkins/workspace/automacao_ruby:/app/features animacr/automacao_ruby:1.0.0'
           } catch (e) {
               currentBuild.result = 'FAILURE'
               throw e
-          } finally {
-            sh 'docker-compose down'
           }
         }
       }
